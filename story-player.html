@@ -422,8 +422,8 @@
         let allStories = [];
 
         // Initialize the page when DOM is loaded
-        document.addEventListener('DOMContentLoaded', function () {
-            loadStoryFromUrl();
+        window.addEventListener('load', function () {
+            setTimeout(loadStoryFromUrl, 50); // 稍微延迟执行，确保资源可用
         });
 
         /**
