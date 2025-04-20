@@ -422,42 +422,26 @@
         async function loadStoryFromUrl() {
             const urlParams = new URLSearchParams(window.location.search);
             const storyId = urlParams.get('id');
-            const source = urlParams.get('source');
             
             if (!storyId) {
-                updateStatus("Error: No story ID provided");
+                showError("No story ID provided");
                 return;
             }
             
-            // Check if it's a user story (from Firestore)
-            if (source === 'user') {
-                // Get current user
-                const user = firebase.auth().currentUser;
+            // 首先检查是否为用户上传的故事 (通常以 "story_" 开头)
+            if (storyId.startsWith('story_')) {
+                // 从 localStorage 中读取用户故事
+                const userStories = JSON.parse(localStorage.getItem('userStories')) || [];
+                const userStory = userStories.find(story => story.id === storyId);
                 
-                if (!user) {
-                    // Wait for auth state to change if user is not yet available
-                    firebase.auth().onAuthStateChanged((user) => {
-                        if (user) {
-                            loadUserStoryFromFirestore(user.uid, storyId);
-                        } else {
-                            // Try anonymous sign in if no user
-                            firebase.auth().signInAnonymously()
-                                .then((userCredential) => {
-                                    loadUserStoryFromFirestore(userCredential.user.uid, storyId);
-                                })
-                                .catch((error) => {
-                                    updateStatus(`Authentication error: ${error.message}`);
-                                });
-                        }
-                    });
+                if (userStory) {
+                    // 找到用户故事，加载内容
+                    displayStory(userStory);
                 } else {
-                    // User already signed in
-                    loadUserStoryFromFirestore(user.uid, storyId);
+                    showError("User story not found");
                 }
             } else {
-                // Load system story from stories.json
-                updateStatus("Loading story...");
-                
+                // 尝试从系统故事中加载
                 fetch('stories.json')
                     .then(response => {
                         if (!response.ok) {
@@ -471,49 +455,35 @@
                         if (story) {
                             displayStory(story);
                         } else {
-                            updateStatus("Story not found in system library");
+                            // 如果系统故事中找不到，再次尝试从用户故事中查找
+                            const userStories = JSON.parse(localStorage.getItem('userStories')) || [];
+                            const userStory = userStories.find(s => s.id === storyId);
+                            
+                            if (userStory) {
+                                displayStory(userStory);
+                            } else {
+                                showError("Story not found");
+                            }
                         }
                     })
                     .catch(error => {
                         console.error('Error loading story:', error);
-                        updateStatus(`Error: ${error.message}`);
+                        
+                        // 如果系统故事加载失败，尝试从用户故事中查找
+                        try {
+                            const userStories = JSON.parse(localStorage.getItem('userStories')) || [];
+                            const userStory = userStories.find(s => s.id === storyId);
+                            
+                            if (userStory) {
+                                displayStory(userStory);
+                            } else {
+                                showError("Failed to load story");
+                            }
+                        } catch (e) {
+                            showError("Failed to load story");
+                        }
                     });
             }
-        }
-        
-        /**
-         * Load a user story from Firestore
-         * @param {string} uid - User ID
-         * @param {string} storyId - Story ID
-         */
-        function loadUserStoryFromFirestore(uid, storyId) {
-            updateStatus("Loading your story...");
-            
-            firebase.firestore().collection('users').doc(uid).collection('stories').doc(storyId)
-                .get()
-                .then((doc) => {
-                    if (doc.exists) {
-                        const storyData = doc.data();
-                        
-                        // Create story object with required fields
-                        const story = {
-                            id: storyId,
-                            title: storyData.title || 'Untitled Story',
-                            content: storyData.content || '',
-                            coverImage: '/covers/user-story.jpg', // Default cover for user stories
-                            ageRange: 'All ages',
-                            isUserStory: true
-                        };
-                        
-                        displayStory(story);
-                    } else {
-                        updateStatus("Story not found in your library");
-                    }
-                })
-                .catch((error) => {
-                    console.error("Error loading user story:", error);
-                    updateStatus(`Error: ${error.message}`);
-                });
         }
         
         /**

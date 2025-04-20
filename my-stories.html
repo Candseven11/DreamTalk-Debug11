@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,388 +12,618 @@
             box-sizing: border-box;
             font-family: 'Arial Rounded MT Bold', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-
+        
         body {
             background-color: #fcf2f7;
             color: #5a3d5c;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
         }
-
+        
         .container {
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
-            flex: 1;
         }
-
+        
         header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 0;
-            margin-bottom: 30px;
+            text-align: center;
+            padding: 30px 0;
+            position: relative;
         }
-
+        
         .logo {
-            font-size: 1.8rem;
+            font-size: 2.5rem;
             font-weight: bold;
             color: #e86ed0;
-            display: flex;
-            align-items: center;
-            text-decoration: none;
+            margin-bottom: 10px;
+            display: inline-block;
+            position: relative;
         }
-
-        .logo i {
-            margin-right: 10px;
-        }
-
-        .back-button {
-            background-color: transparent;
-            border: none;
-            color: #9d7e9f;
+        
+        .tagline {
             font-size: 1.2rem;
-            cursor: pointer;
+            color: #9d7e9f;
+            margin-bottom: 30px;
+        }
+        
+        .back-button {
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 12px 25px;
+            border-radius: 50px;
+            background-color: #a1d2ce;
+            color: #3a6f6a;
+            text-decoration: none;
+            font-weight: bold;
             display: flex;
             align-items: center;
             transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
-
+        
         .back-button:hover {
-            color: #5a3d5c;
-            transform: translateX(-5px);
+            background-color: #8bc4bf;
+            transform: translateY(-50%) translateX(-5px);
+            box-shadow: 0 6px 20px rgba(161, 210, 206, 0.3);
         }
-
+        
         .back-button i {
             margin-right: 8px;
         }
-
-        .stories-container {
-            background-color: white;
-            border-radius: 30px;
-            padding: 40px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-            margin-bottom: 40px;
-        }
-
-        h1 {
+        
+        .section-title {
             text-align: center;
             margin-bottom: 30px;
+            font-size: 2.2rem;
             color: #5a3d5c;
+            position: relative;
         }
-
-        .stories-list {
+        
+        .section-title::after {
+            content: "";
+            display: block;
+            width: 80px;
+            height: 4px;
+            background-color: #e86ed0;
+            margin: 10px auto;
+            border-radius: 2px;
+        }
+        
+        .story-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 25px;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
         }
-
+        
         .story-card {
-            background-color: #f9f9f9;
+            background-color: white;
             border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
             transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .story-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .story-image {
-            height: 150px;
-            background-color: #e0e0e0;
+            height: 100%;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #9d7e9f;
-            font-size: 3rem;
+            flex-direction: column;
         }
-
-        .story-details {
+        
+        .story-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .story-image {
+            height: 200px;
+            overflow: hidden;
+        }
+        
+        .story-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .story-card:hover .story-image img {
+            transform: scale(1.05);
+        }
+        
+        .story-content {
             padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
         }
-
+        
         .story-title {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             margin-bottom: 10px;
             color: #5a3d5c;
         }
-
-        .story-date {
-            font-size: 0.8rem;
+        
+        .story-description {
             color: #9d7e9f;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            line-height: 1.5;
+            flex-grow: 1;
         }
-
+        
+        .story-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        
+        .story-age {
+            font-size: 0.8rem;
+            color: #a1d2ce;
+            font-weight: bold;
+            padding: 4px 12px;
+            background-color: #f0f9f8;
+            border-radius: 50px;
+        }
+        
+        .story-category {
+            font-size: 0.8rem;
+            color: #e86ed0;
+            font-weight: bold;
+            padding: 4px 12px;
+            background-color: #fcf2f7;
+            border-radius: 50px;
+        }
+        
+        .story-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+        }
+        
+        .action-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: white;
+        }
+        
+        .edit-btn {
+            background-color: #a1d2ce;
+        }
+        
+        .edit-btn:hover {
+            background-color: #8bc4bf;
+            transform: scale(1.1);
+        }
+        
+        .delete-btn {
+            background-color: #ff7e7e;
+        }
+        
+        .delete-btn:hover {
+            background-color: #ff6060;
+            transform: scale(1.1);
+        }
+        
         .empty-state {
             text-align: center;
-            padding: 40px 0;
-            color: #9d7e9f;
+            padding: 60px 20px;
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
         }
-
+        
         .empty-state i {
-            font-size: 3rem;
-            margin-bottom: 20px;
+            font-size: 4rem;
             color: #e0e0e0;
-        }
-
-        .empty-state p {
             margin-bottom: 20px;
         }
-
+        
+        .empty-state h3 {
+            font-size: 1.5rem;
+            color: #5a3d5c;
+            margin-bottom: 15px;
+        }
+        
+        .empty-state p {
+            color: #9d7e9f;
+            margin-bottom: 30px;
+        }
+        
         .btn {
-            padding: 12px 25px;
+            padding: 15px 30px;
             border-radius: 50px;
             border: none;
-            font-size: 1rem;
+            font-size: 1.1rem;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
             display: inline-flex;
             align-items: center;
-            text-decoration: none;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-decoration: none;
         }
-
+        
         .btn i {
-            margin-right: 8px;
+            margin-right: 10px;
         }
-
+        
         .btn-primary {
             background-color: #e86ed0;
             color: white;
         }
-
+        
         .btn-primary:hover {
-            background-color: #d55bc0;
+            background-color: #d64bbd;
             transform: translateY(-3px);
             box-shadow: 0 6px 20px rgba(232, 110, 208, 0.3);
         }
-
-        #loading {
-            text-align: center;
-            padding: 40px 0;
-            color: #9d7e9f;
-        }
-
-        .loading-spinner {
-            display: inline-block;
-            width: 40px;
-            height: 40px;
-            margin-bottom: 20px;
-            border: 4px solid rgba(232, 110, 208, 0.2);
-            border-radius: 50%;
-            border-top-color: #e86ed0;
-            animation: spin 1s ease-in-out infinite;
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
+        
         footer {
             text-align: center;
             padding: 30px 0;
             color: #9d7e9f;
             font-size: 0.9rem;
-            background-color: white;
-            margin-top: auto;
+            margin-top: 50px;
         }
-
+        
         @media (max-width: 768px) {
-            .stories-container {
-                padding: 30px 20px;
+            .back-button {
+                position: static;
+                transform: none;
+                margin-bottom: 20px;
+                display: inline-flex;
             }
-
-            .stories-list {
-                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-                gap: 15px;
+            
+            header {
+                text-align: center;
+                padding-top: 20px;
+            }
+            
+            .story-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .story-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
             }
         }
     </style>
 </head>
-
 <body>
     <div class="container">
         <header>
-            <button class="back-button" onclick="location.href='index.html'">
-                <i class="fas fa-arrow-left"></i> Back
-            </button>
-            <a href="index.html" class="logo">
-                <i class="fas fa-moon"></i> DreamTalk Box
+            <a href="index.html" class="back-button">
+                <i class="fas fa-arrow-left"></i> Back to Home
             </a>
-            <div style="width: 100px;"></div> <!-- Spacer for alignment -->
+            <div class="logo">DreamTalk Box</div>
+            <p class="tagline">Your personal collection of bedtime stories</p>
         </header>
-
-        <div class="stories-container">
-            <h1>My Stories</h1>
-
-            <div id="loading">
-                <div class="loading-spinner"></div>
-                <p>Loading your stories...</p>
-            </div>
-
-            <div id="stories-list" class="stories-list" style="display: none;"></div>
-
-            <div id="empty-state" class="empty-state" style="display: none;">
-                <i class="fas fa-book"></i>
-                <p>You haven't created any stories yet.</p>
-                <a href="story-upload.html" class="btn btn-primary">
-                    <i class="fas fa-plus"></i> Create Your First Story
-                </a>
-            </div>
+        
+        <h1 class="section-title">My Stories</h1>
+        
+        <div id="storiesContainer">
+            <!-- Stories will be loaded here dynamically -->
         </div>
+        
+        <footer>
+            <p>© 2023 DreamTalk Box. All rights reserved.</p>
+        </footer>
     </div>
-
-    <footer>
-        <p>© 2023 DreamTalk Box. All rights reserved.</p>
-    </footer>
-
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-
+    
     <script>
-        // Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyD4fhwhOOFF7CBEWYnOplLiAh021905LAQ",
-            authDomain: "dreamtalk-91c96.firebaseapp.com",
-            projectId: "dreamtalk-91c96",
-            storageBucket: "dreamtalk-91c96.firebasestorage.app",
-            messagingSenderId: "1073825503044",
-            appId: "1:1073825503044:web:c70d0c119795b66dab6911",
-            measurementId: "G-XJZE5QM6W0"
-        };
-
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-
-        // Get references to Firebase services
-        const auth = firebase.auth();
-        const db = firebase.firestore();
-
-        // DOM elements
-        const loadingElement = document.getElementById('loading');
-        const storiesListElement = document.getElementById('stories-list');
-        const emptyStateElement = document.getElementById('empty-state');
-
-        // Sign in anonymously when page loads
-        document.addEventListener('DOMContentLoaded', function () {
-            signInAnonymously();
-        });
-
-        // Anonymous sign in function
-        function signInAnonymously() {
-            auth.signInAnonymously()
-                .then(() => {
-                    console.log('Signed in anonymously');
-                    loadUserStories();
-                })
-                .catch((error) => {
-                    console.error('Error signing in:', error);
-                    showError('Error signing in: ' + error.message);
-                });
-        }
-
-        // Load user stories from Firestore
-        function loadUserStories() {
-            // Check if user is signed in
-            const user = auth.currentUser;
-            if (!user) {
-                console.log('No user signed in, waiting...');
-
-                // Wait for auth state to change
-                auth.onAuthStateChanged((user) => {
-                    if (user) {
-                        fetchStories(user.uid);
-                    }
-                });
-                return;
-            }
-
-            fetchStories(user.uid);
-        }
-
-        // Fetch stories from Firestore
-        function fetchStories(userId) {
-            db.collection('users').doc(userId).collection('stories')
-                .orderBy('timestamp', 'desc')
-                .get()
-                .then((querySnapshot) => {
-                    // Hide loading indicator
-                    loadingElement.style.display = 'none';
-
-                    if (querySnapshot.empty) {
-                        // Show empty state
-                        emptyStateElement.style.display = 'block';
-                        return;
-                    }
-
-                    // Show stories list
-                    storiesListElement.style.display = 'grid';
-
-                    // Clear any existing content
-                    storiesListElement.innerHTML = '';
-
-                    // Add each story to the list
-                    querySnapshot.forEach((doc) => {
-                        const story = doc.data();
-                        const storyId = doc.id;
-
-                        // Format date
-                        let dateString = 'Just now';
-                        if (story.timestamp) {
-                            const date = story.timestamp.toDate();
-                            dateString = date.toLocaleDateString('en-US', {
-                                year: 'numeric',
-                                month: 'short',
-                                day: 'numeric'
-                            });
-                        }
-
-                        // Create story card
-                        const storyCard = document.createElement('div');
-                        storyCard.className = 'story-card';
-                        storyCard.onclick = () => {
-                            window.location.href = `story-player.html?id=${storyId}&source=user`;
-                        };
-
-                        storyCard.innerHTML = `
-                            <div class="story-image">
-                                <i class="fas fa-book-open"></i>
+        document.addEventListener('DOMContentLoaded', function() {
+            const storiesContainer = document.getElementById('storiesContainer');
+            
+            // Load user stories from localStorage
+            const userStories = JSON.parse(localStorage.getItem('userStories')) || [];
+            
+            if (userStories.length === 0) {
+                // Display empty state if no stories found
+                storiesContainer.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-book-open"></i>
+                        <h3>You haven't uploaded any stories yet.</h3>
+                        <p>Create your own bedtime stories to read to your little ones.</p>
+                        <a href="story-upload.html" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Create New Story
+                        </a>
+                    </div>
+                `;
+            } else {
+                // Create story grid and cards
+                const storyGrid = document.createElement('div');
+                storyGrid.className = 'story-grid';
+                
+                userStories.forEach(story => {
+                    // Create story preview (first 60 characters)
+                    const storyPreview = story.content ? 
+                        story.content.substring(0, 60) + (story.content.length > 60 ? '...' : '') : 
+                        'No content available';
+                    
+                    // Create story card
+                    const storyCard = document.createElement('div');
+                    storyCard.className = 'story-card';
+                    storyCard.innerHTML = `
+                        <div class="story-image">
+                            <img src="${story.cover || 'covers/default.jpg'}" alt="${story.title}" onerror="this.src='covers/default.jpg'">
+                        </div>
+                        <div class="story-content">
+                            <h3 class="story-title">${story.title || 'Untitled Story'}</h3>
+                            <div class="story-meta">
+                                <span class="story-age">Ages 3-7</span>
+                                <span class="story-category">Bedtime</span>
                             </div>
-                            <div class="story-details">
-                                <h3 class="story-title">${story.title}</h3>
-                                <p class="story-date">${dateString}</p>
+                            <p class="story-description">${storyPreview}</p>
+                            <div class="story-actions">
+                                <div class="action-btn edit-btn" data-id="${story.id}">
+                                    <i class="fas fa-edit"></i>
+                                </div>
+                                <div class="action-btn delete-btn" data-id="${story.id}">
+                                    <i class="fas fa-trash-alt"></i>
+                                </div>
                             </div>
-                        `;
-
-                        storiesListElement.appendChild(storyCard);
+                        </div>
+                    `;
+                    
+                    storyGrid.appendChild(storyCard);
+                });
+                
+                storiesContainer.appendChild(storyGrid);
+                
+                // Add event listeners for edit and delete buttons
+                document.querySelectorAll('.edit-btn').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const storyId = this.getAttribute('data-id');
+                        console.log('Edit story:', storyId);
+                        // Placeholder for edit functionality
+                        alert('Edit functionality will be implemented soon!');
                     });
-                })
-                .catch((error) => {
-                    console.error('Error loading stories:', error);
-                    showError('Error loading stories: ' + error.message);
                 });
-        }
-
-        // Show error message
-        function showError(message) {
-            loadingElement.innerHTML = `
-                <i class="fas fa-exclamation-circle" style="font-size: 2rem; color: #e74c3c; margin-bottom: 15px;"></i>
-                <p>${message}</p>
-                <button onclick="location.reload()" class="btn btn-primary" style="margin-top: 15px;">
-                    <i class="fas fa-redo"></i> Try Again
-                </button>
-            `;
-        }
+                
+                document.querySelectorAll('.delete-btn').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const storyId = this.getAttribute('data-id');
+                        
+                        if (confirm('Are you sure you want to delete this story?')) {
+                            // Remove story from localStorage
+                            const userStories = JSON.parse(localStorage.getItem('userStories')) || [];
+                            const updatedStories = userStories.filter(story => story.id !== storyId);
+                            localStorage.setItem('userStories', JSON.stringify(updatedStories));
+                            
+                            // Refresh the page to show updated list
+                            location.reload();
+                        }
+                    });
+                });
+                
+                // Make story cards clickable to view the story
+                document.querySelectorAll('.story-card').forEach(card => {
+                    card.addEventListener('click', function(e) {
+                        // Only navigate if the click wasn't on a button
+                        if (!e.target.closest('.action-btn')) {
+                            const storyId = this.querySelector('.action-btn').getAttribute('data-id');
+                            window.location.href = `story-player.html?id=${storyId}`;
+                        }
+                    });
+                });
+            }
+        });
     </script>
-</body>
+<!-- 🌟 订阅等级浮标（插入在每个页面底部） -->
+<div id="subscription-badge" style="position: fixed; top: 15px; right: 15px; padding: 8px 12px; border-radius: 20px; font-size: 14px; font-weight: 500; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.1); z-index: 1000; background-color: #f8f0ff; color: #6b46c1; transition: all 0.3s ease;"></div>
 
+<script>
+  (function() {
+    if (!localStorage.getItem('userPlan')) {
+      localStorage.setItem('userPlan', 'free');
+    }
+    const userPlan = localStorage.getItem('userPlan').toLowerCase();
+    const badge = document.getElementById('subscription-badge');
+
+    switch(userPlan) {
+      case 'free':
+        badge.innerHTML = '🌱 Plan: Free';
+        badge.style.backgroundColor = '#f0f9ff';
+        badge.style.color = '#3182ce';
+        break;
+      case 'starter':
+        badge.innerHTML = '🔰 Plan: Starter';
+        badge.style.backgroundColor = '#f0fff4';
+        badge.style.color = '#38a169';
+        break;
+      case 'plus':
+        badge.innerHTML = '🚀 Plan: Plus';
+        badge.style.backgroundColor = '#faf5ff';
+        badge.style.color = '#805ad5';
+        break;
+      case 'pro':
+        badge.innerHTML = '👑 Plan: Pro';
+        badge.style.backgroundColor = '#fff5f7';
+        badge.style.color = '#d53f8c';
+        break;
+      default:
+        badge.innerHTML = '🌱 Plan: Free';
+        badge.style.backgroundColor = '#f0f9ff';
+        badge.style.color = '#3182ce';
+    }
+
+    badge.onmouseover = function() {
+      this.style.transform = 'translateY(-2px)';
+      this.style.boxShadow = '0 4px 8px rgba(0,0,0,0.15)';
+    };
+    badge.onmouseout = function() {
+      this.style.transform = 'translateY(0)';
+      this.style.boxShadow = '0 2px 5px rgba(0,0,0,0.1)';
+    };
+    badge.onclick = function() {
+  window.location.href = '/pricing';
+};
+  })();
+</script>
+
+<!-- Firebase App + Auth CDN -->
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+
+<!-- 自动匿名登录脚本 -->
+<script>
+  // 初始化 Firebase + 匿名登录
+  document.addEventListener('DOMContentLoaded', function() {
+    // Firebase 配置
+    const firebaseConfig = {
+    apiKey: "AIzaSyD4fhwhOOFF7CBEWYnOplLiAh021905LAQ",
+    authDomain: "dreamtalk-91c96.firebaseapp.com",
+    projectId: "dreamtalk-91c96",
+    storageBucket: "reamtalk-91c96.appspot.com",
+    messagingSenderId: "1073825503044",
+    appId: "1:1073825503044:web:c70d0c119795b66dab6911",
+    measurementId: "G-XJZE5QM6W0"
+  };
+
+    // 初始化 Firebase
+    firebase.initializeApp(firebaseConfig);
+    
+    // 获取 Auth 实例
+    const auth = firebase.auth();
+    
+    // 检查用户是否已登录
+    auth.onAuthStateChanged(function(user) {
+      if (user) {
+        // 用户已登录，保存 UID 到 localStorage
+        localStorage.setItem('userId', user.uid);
+        console.log('User is signed in with UID:', user.uid);
+      } else {
+        // 用户未登录，执行匿名登录
+        auth.signInAnonymously()
+          .then(() => {
+            console.log('Anonymous authentication successful');
+          })
+          .catch((error) => {
+            console.error('Anonymous authentication error:', error.code, error.message);
+          });
+      }
+    });
+  });
+</script>
+
+<!-- my-stories.html 页面 Firestore 读取脚本 -->
+<script>
+    // 页面加载 → 从 Firestore 读取用户 stories 渲染
+    document.addEventListener('DOMContentLoaded', function() {
+      // 引入 Firestore
+      const firestoreScript = document.createElement('script');
+      firestoreScript.src = 'https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js';
+      firestoreScript.onload = fetchUserStories;
+      document.head.appendChild(firestoreScript);
+      
+      async function fetchUserStories() {
+        // 获取 Firestore 实例
+        const db = firebase.firestore();
+        
+        // 获取用户ID
+        const userId = localStorage.getItem('userId');
+        if (!userId) {
+          console.error('User not logged in');
+          displayMessage('Please log in to view your stories');
+          return;
+        }
+        
+        // 获取故事列表容器
+        const storiesContainer = document.getElementById('user-stories') || 
+                                document.querySelector('.stories-grid') || 
+                                document.querySelector('.stories-container');
+        
+        if (!storiesContainer) {
+          console.error('Stories container not found');
+          return;
+        }
+        
+        try {
+          // 查询用户的故事
+          const storiesSnapshot = await db.collection('users').doc(userId).collection('stories').get();
+          
+          if (storiesSnapshot.empty) {
+            displayMessage('You haven\'t created any stories yet');
+            return;
+          }
+          
+          // 清空容器
+          storiesContainer.innerHTML = '';
+          
+          // 渲染故事
+          storiesSnapshot.forEach(doc => {
+            const story = doc.data();
+            story.id = doc.id;
+            
+            // 创建故事卡片
+            const storyCard = createStoryCard(story);
+            storiesContainer.appendChild(storyCard);
+          });
+          
+          // 同时更新 localStorage
+          const stories = storiesSnapshot.docs.map(doc => {
+            const data = doc.data();
+            return {
+              id: doc.id,
+              title: data.title,
+              content: data.content,
+              coverUrl: data.coverUrl
+            };
+          });
+          
+          localStorage.setItem('userStories', JSON.stringify(stories));
+          
+        } catch (error) {
+          console.error('Error fetching stories from Firestore:', error);
+          displayMessage('Failed to load your stories');
+        }
+      }
+      
+      // 辅助函数：创建故事卡片
+      function createStoryCard(story) {
+        const card = document.createElement('div');
+        card.className = 'story-card';
+        
+        // 设置卡片内容 - 根据实际页面结构调整
+        card.innerHTML = `
+          <div class="story-cover">
+            <img src="${story.coverUrl || 'default-cover.jpg'}" alt="${story.title}" onerror="this.src='default-cover.jpg'">
+          </div>
+          <div class="story-info">
+            <h3>${story.title}</h3>
+            <p>${story.content.substring(0, 100)}${story.content.length > 100 ? '...' : ''}</p>
+            <a href="story-player.html?id=${story.id}" class="read-button">Read Story</a>
+          </div>
+        `;
+        
+        return card;
+      }
+      
+      // 辅助函数：显示消息
+      function displayMessage(message) {
+        const storiesContainer = document.getElementById('user-stories') || 
+                                document.querySelector('.stories-grid') || 
+                                document.querySelector('.stories-container');
+        
+        if (storiesContainer) {
+          storiesContainer.innerHTML = `<div class="empty-message">${message}</div>`;
+        }
+      }
+    });
+  </script>
+</body>
 </html>
