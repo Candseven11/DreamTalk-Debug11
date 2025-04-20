@@ -874,5 +874,81 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 </script>
+<script>
+    // 引入 Firestore 并监听播放按钮点击
+    document.addEventListener('DOMContentLoaded', function() {
+      // 动态加载 Firestore SDK
+      if (typeof firebase === 'undefined' || !firebase.firestore) {
+        const firestoreScript = document.createElement('script');
+        firestoreScript.src = 'https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js';
+        firestoreScript.onload = initPlayTracking;
+        document.head.appendChild(firestoreScript);
+      } else {
+        initPlayTracking();
+      }
+  
+      function initPlayTracking() {
+        // 获取 Firestore 实例
+        const db = firebase.firestore();
+        
+        // 获取用户ID
+        const userId = localStorage.getItem('userId');
+        if (!userId) {
+          console.error('User not logged in');
+          return;
+        }
+        
+        // 从URL获取故事ID
+        const urlParams = new URLSearchParams(window.location.search);
+        const storyId = urlParams.get('id');
+        if (!storyId) {
+          console.error('No story ID found in URL');
+          return;
+        }
+        
+        // 查找所有播放按钮并添加事件监听
+        const playButtons = document.querySelectorAll('button[id*="play"], .play-button, [class*="play"]');
+        
+        playButtons.forEach(button => {
+          // 保存原始点击事件处理函数
+          const originalClickHandler = button.onclick;
+          
+          // 添加新的点击事件处理函数
+          button.onclick = function(event) {
+            // 确定使用的音色类型
+            let voiceType = 'default';
+            
+            // 尝试从按钮或其父元素的类名或ID判断音色类型
+            const buttonEl = event.currentTarget;
+            if (buttonEl.id && buttonEl.id.includes('user') || 
+                buttonEl.className && buttonEl.className.includes('user') ||
+                buttonEl.closest('[id*="user"], [class*="user"]')) {
+              voiceType = 'user';
+            }
+            
+            // 记录播放事件到Firestore
+            db.collection('users').doc(userId).collection('plays').add({
+              storyId: storyId,
+              voiceType: voiceType,
+              playedAt: firebase.firestore.FieldValue.serverTimestamp()
+            })
+            .then(() => {
+              console.log('Play record saved to Firestore');
+            })
+            .catch(error => {
+              console.error('Error saving play record:', error);
+            });
+            
+            // 执行原始点击事件处理函数
+            if (typeof originalClickHandler === 'function') {
+              return originalClickHandler.apply(this, arguments);
+            }
+          };
+        });
+        
+        console.log('Play tracking initialized for story:', storyId);
+      }
+    });
+  </script>
 </body>
 </html>
