@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,7 +13,7 @@
             box-sizing: border-box;
             font-family: 'Arial Rounded MT Bold', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
+
         body {
             background-color: #fcf2f7;
             color: #5a3d5c;
@@ -20,14 +21,14 @@
             display: flex;
             flex-direction: column;
         }
-        
+
         .container {
             max-width: 1000px;
             margin: 0 auto;
             padding: 20px;
             flex: 1;
         }
-        
+
         header {
             display: flex;
             justify-content: space-between;
@@ -35,7 +36,7 @@
             padding: 20px 0;
             margin-bottom: 30px;
         }
-        
+
         .logo {
             font-size: 1.8rem;
             font-weight: bold;
@@ -44,11 +45,11 @@
             align-items: center;
             text-decoration: none;
         }
-        
+
         .logo i {
             margin-right: 10px;
         }
-        
+
         .back-button {
             background-color: transparent;
             border: none;
@@ -59,16 +60,16 @@
             align-items: center;
             transition: all 0.3s ease;
         }
-        
+
         .back-button:hover {
             color: #5a3d5c;
             transform: translateX(-5px);
         }
-        
+
         .back-button i {
             margin-right: 8px;
         }
-        
+
         .stories-container {
             background-color: white;
             border-radius: 30px;
@@ -76,19 +77,19 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
             margin-bottom: 40px;
         }
-        
+
         h1 {
             text-align: center;
             margin-bottom: 30px;
             color: #5a3d5c;
         }
-        
+
         .stories-list {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 25px;
         }
-        
+
         .story-card {
             background-color: #f9f9f9;
             border-radius: 20px;
@@ -97,12 +98,12 @@
             transition: all 0.3s ease;
             cursor: pointer;
         }
-        
+
         .story-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
         }
-        
+
         .story-image {
             height: 150px;
             background-color: #e0e0e0;
@@ -112,38 +113,38 @@
             color: #9d7e9f;
             font-size: 3rem;
         }
-        
+
         .story-details {
             padding: 20px;
         }
-        
+
         .story-title {
             font-size: 1.2rem;
             margin-bottom: 10px;
             color: #5a3d5c;
         }
-        
+
         .story-date {
             font-size: 0.8rem;
             color: #9d7e9f;
         }
-        
+
         .empty-state {
             text-align: center;
             padding: 40px 0;
             color: #9d7e9f;
         }
-        
+
         .empty-state i {
             font-size: 3rem;
             margin-bottom: 20px;
             color: #e0e0e0;
         }
-        
+
         .empty-state p {
             margin-bottom: 20px;
         }
-        
+
         .btn {
             padding: 12px 25px;
             border-radius: 50px;
@@ -157,28 +158,28 @@
             text-decoration: none;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
-        
+
         .btn i {
             margin-right: 8px;
         }
-        
+
         .btn-primary {
             background-color: #e86ed0;
             color: white;
         }
-        
+
         .btn-primary:hover {
             background-color: #d55bc0;
             transform: translateY(-3px);
             box-shadow: 0 6px 20px rgba(232, 110, 208, 0.3);
         }
-        
+
         #loading {
             text-align: center;
             padding: 40px 0;
             color: #9d7e9f;
         }
-        
+
         .loading-spinner {
             display: inline-block;
             width: 40px;
@@ -189,11 +190,13 @@
             border-top-color: #e86ed0;
             animation: spin 1s ease-in-out infinite;
         }
-        
+
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            to {
+                transform: rotate(360deg);
+            }
         }
-        
+
         footer {
             text-align: center;
             padding: 30px 0;
@@ -202,12 +205,12 @@
             background-color: white;
             margin-top: auto;
         }
-        
+
         @media (max-width: 768px) {
             .stories-container {
                 padding: 30px 20px;
             }
-            
+
             .stories-list {
                 grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
                 gap: 15px;
@@ -215,6 +218,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <header>
@@ -226,17 +230,17 @@
             </a>
             <div style="width: 100px;"></div> <!-- Spacer for alignment -->
         </header>
-        
+
         <div class="stories-container">
             <h1>My Stories</h1>
-            
+
             <div id="loading">
                 <div class="loading-spinner"></div>
                 <p>Loading your stories...</p>
             </div>
-            
+
             <div id="stories-list" class="stories-list" style="display: none;"></div>
-            
+
             <div id="empty-state" class="empty-state" style="display: none;">
                 <i class="fas fa-book"></i>
                 <p>You haven't created any stories yet.</p>
@@ -246,44 +250,45 @@
             </div>
         </div>
     </div>
-    
+
     <footer>
         <p>© 2023 DreamTalk Box. All rights reserved.</p>
     </footer>
-    
+
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-    
+
     <script>
         // Firebase configuration
         const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_PROJECT_ID.appspot.com",
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-            appId: "YOUR_APP_ID"
+            apiKey: "AIzaSyD4fhwhOOFF7CBEWYnOplLiAh021905LAQ",
+            authDomain: "dreamtalk-91c96.firebaseapp.com",
+            projectId: "dreamtalk-91c96",
+            storageBucket: "dreamtalk-91c96.firebasestorage.app",
+            messagingSenderId: "1073825503044",
+            appId: "1:1073825503044:web:c70d0c119795b66dab6911",
+            measurementId: "G-XJZE5QM6W0"
         };
-        
+
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
-        
+
         // Get references to Firebase services
         const auth = firebase.auth();
         const db = firebase.firestore();
-        
+
         // DOM elements
         const loadingElement = document.getElementById('loading');
         const storiesListElement = document.getElementById('stories-list');
         const emptyStateElement = document.getElementById('empty-state');
-        
+
         // Sign in anonymously when page loads
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             signInAnonymously();
         });
-        
+
         // Anonymous sign in function
         function signInAnonymously() {
             auth.signInAnonymously()
@@ -296,14 +301,14 @@
                     showError('Error signing in: ' + error.message);
                 });
         }
-        
+
         // Load user stories from Firestore
         function loadUserStories() {
             // Check if user is signed in
             const user = auth.currentUser;
             if (!user) {
                 console.log('No user signed in, waiting...');
-                
+
                 // Wait for auth state to change
                 auth.onAuthStateChanged((user) => {
                     if (user) {
@@ -312,10 +317,10 @@
                 });
                 return;
             }
-            
+
             fetchStories(user.uid);
         }
-        
+
         // Fetch stories from Firestore
         function fetchStories(userId) {
             db.collection('users').doc(userId).collection('stories')
@@ -324,24 +329,24 @@
                 .then((querySnapshot) => {
                     // Hide loading indicator
                     loadingElement.style.display = 'none';
-                    
+
                     if (querySnapshot.empty) {
                         // Show empty state
                         emptyStateElement.style.display = 'block';
                         return;
                     }
-                    
+
                     // Show stories list
                     storiesListElement.style.display = 'grid';
-                    
+
                     // Clear any existing content
                     storiesListElement.innerHTML = '';
-                    
+
                     // Add each story to the list
                     querySnapshot.forEach((doc) => {
                         const story = doc.data();
                         const storyId = doc.id;
-                        
+
                         // Format date
                         let dateString = 'Just now';
                         if (story.timestamp) {
@@ -352,14 +357,14 @@
                                 day: 'numeric'
                             });
                         }
-                        
+
                         // Create story card
                         const storyCard = document.createElement('div');
                         storyCard.className = 'story-card';
                         storyCard.onclick = () => {
                             window.location.href = `story-player.html?id=${storyId}&source=user`;
                         };
-                        
+
                         storyCard.innerHTML = `
                             <div class="story-image">
                                 <i class="fas fa-book-open"></i>
@@ -369,7 +374,7 @@
                                 <p class="story-date">${dateString}</p>
                             </div>
                         `;
-                        
+
                         storiesListElement.appendChild(storyCard);
                     });
                 })
@@ -378,7 +383,7 @@
                     showError('Error loading stories: ' + error.message);
                 });
         }
-        
+
         // Show error message
         function showError(message) {
             loadingElement.innerHTML = `
@@ -391,4 +396,5 @@
         }
     </script>
 </body>
+
 </html>
