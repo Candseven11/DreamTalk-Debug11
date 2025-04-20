@@ -420,35 +420,46 @@
         // Global variables
         let currentStory = null;
         let allStories = [];
-
-        // Initialize the page when DOM is loaded
-        window.addEventListener('load', function () {
-            setTimeout(loadStoryFromUrl, 50); // 稍微延迟执行，确保资源可用
-        });
-
         /**
          * Extract story ID from URL parameters and load the story
          */
-        function loadStoryFromUrlWithRetry(retries = 5) {
-            fetch('/stories.json')
+        function loadStoryFromUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const storyId = urlParams.get('id');
+
+            if (!storyId) {
+                showError("No story ID provided");
+                return;
+            }
+
+            // Step 1: 先从用户上传故事里找
+            const userStories = JSON.parse(localStorage.getItem('userStories') || '[]');
+            const userStory = userStories.find(s => s.id === storyId);
+
+            if (userStory) {
+                displayStory(userStory);
+                return;
+            }
+
+            // Step 2: 再从系统故事库里找
+            fetch('stories.json')
                 .then(response => {
-                    if (!response.ok) throw new Error('Failed to fetch stories');
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch stories');
+                    }
                     return response.json();
                 })
                 .then(stories => {
-                    const urlParams = new URLSearchParams(window.location.search);
-                    const storyId = urlParams.get('id');
-                    const story = stories.find(s => s.id === storyId);
-                    if (!story) throw new Error('Story not found');
-                    displayStory(story);
+                    const systemStory = stories.find(s => s.id === storyId);
+                    if (systemStory) {
+                        displayStory(systemStory);
+                    } else {
+                        showError("Story not found");
+                    }
                 })
                 .catch(error => {
-                    console.warn('Story load failed:', error.message);
-                    if (retries > 0) {
-                        setTimeout(() => loadStoryFromUrlWithRetry(retries - 1), 300); // 每300ms 重试
-                    } else {
-                        alert('Error: Failed to load story');
-                    }
+                    console.error('Story loading failed:', error);
+                    showError("Failed to load story");
                 });
         }
 
@@ -921,6 +932,9 @@
                 console.log('Play tracking initialized for story:', storyId);
             }
         });
+        document.addEventListener('DOMContentLoaded', function () {
+    loadStoryFromUrl();
+});
     </script>
 </body>
 
