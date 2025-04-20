@@ -767,21 +767,20 @@
   })();
 </script>
 <script>
-// 播放权限限制系统
-function speakStory() {
-  // 获取用户订阅等级
+// 检查并更新播放次数，返回是否允许播放
+function checkAndUpdatePlayCount() {
+  // 获取用户订阅计划
   const userPlan = localStorage.getItem('userPlan') || 'free';
   
-  // 如果是付费用户，直接允许播放
-  if (userPlan !== 'free' && ['starter', 'plus', 'pro'].includes(userPlan.toLowerCase())) {
-    playAudioContent(); // 调用原有的播放函数
-    return;
+  // 如果不是免费用户，直接允许播放
+  if (userPlan !== 'free') {
+    return true;
   }
   
-  // 对免费用户进行播放次数限制
-  const today = new Date().toISOString().split('T')[0]; // 获取当前日期，格式：YYYY-MM-DD
+  // 获取今日日期 (YYYY-MM-DD 格式)
+  const today = new Date().toISOString().split('T')[0];
   
-  // 获取并解析每日播放记录
+  // 获取播放记录
   let dailyPlayLog = {};
   try {
     dailyPlayLog = JSON.parse(localStorage.getItem('dailyPlayLog') || '{}');
@@ -790,43 +789,45 @@ function speakStory() {
   }
   
   // 获取今日播放次数
-  const todayPlayCount = dailyPlayLog[today] || 0;
+  const todayCount = dailyPlayLog[today] || 0;
   
-  // 检查是否超出限制
-  if (todayPlayCount >= 5) {
-    // 显示升级提示
-    alert("Free users can only play 5 stories per day. Please upgrade your plan for unlimited access.");
-    return;
+  // 检查是否达到限制
+  if (todayCount >= 5) {
+    alert("You have reached the daily play limit for free users. Please upgrade to continue.");
+    return false;
   }
   
-  // 允许播放，并更新播放记录
-  playAudioContent(); // 调用原有的播放函数
-  
-  // 更新播放记录
-  dailyPlayLog[today] = todayPlayCount + 1;
+  // 更新播放次数
+  dailyPlayLog[today] = todayCount + 1;
   localStorage.setItem('dailyPlayLog', JSON.stringify(dailyPlayLog));
-}
-
-// 假设这是原有的播放函数，根据实际情况替换
-function playAudioContent() {
-  // 原有的播放逻辑
-  // 如果页面中已有播放函数，请将此函数替换为调用原有函数
-  console.log("Playing audio content...");
   
-  // 如果页面使用的是其他播放函数名称，请相应修改 speakStory() 中的调用
+  return true;
 }
 
-// 将原有播放按钮的点击事件修改为调用 speakStory
+// 在页面加载完成后执行
 document.addEventListener('DOMContentLoaded', function() {
-  const playButton = document.getElementById('play-button'); // 根据实际情况修改选择器
-  if (playButton) {
-    // 移除原有事件监听器（如果有）
-    const newPlayButton = playButton.cloneNode(true);
-    playButton.parentNode.replaceChild(newPlayButton, playButton);
+  // 获取所有播放按钮
+  const playButtons = document.querySelectorAll('.play-button, .story-play-btn, [id^="play"]');
+  
+  // 为每个播放按钮添加权限检查
+  playButtons.forEach(button => {
+    // 保存原始点击事件
+    const originalClickEvent = button.onclick;
     
-    // 添加新的事件监听器
-    newPlayButton.addEventListener('click', speakStory);
-  }
+    // 设置新的点击事件
+    button.onclick = function(e) {
+      // 检查播放权限
+      if (!checkAndUpdatePlayCount()) {
+        e.preventDefault();
+        return false;
+      }
+      
+      // 如果有原始事件，则执行
+      if (typeof originalClickEvent === 'function') {
+        return originalClickEvent.call(this, e);
+      }
+    };
+  });
 });
 </script>
 </body>
