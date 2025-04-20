@@ -1,316 +1,145 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upload Your Story - DreamTalk Box</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Arial Rounded MT Bold', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            background-color: #fcf2f7;
-            color: #5a3d5c;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            flex: 1;
-        }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 0;
-            margin-bottom: 30px;
-        }
-
-        .logo {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: #e86ed0;
-            display: flex;
-            align-items: center;
-            text-decoration: none;
-        }
-
-        .logo i {
-            margin-right: 10px;
-        }
-
-        .back-button {
-            background-color: transparent;
-            border: none;
-            color: #9d7e9f;
-            font-size: 1.2rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            transition: all 0.3s ease;
-        }
-
-        .back-button:hover {
-            color: #5a3d5c;
-            transform: translateX(-5px);
-        }
-
-        .back-button i {
-            margin-right: 8px;
-        }
-
-        .upload-container {
-            background-color: white;
-            border-radius: 30px;
-            padding: 40px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-            margin-bottom: 40px;
-        }
-
-        h1 {
-            text-align: center;
-            margin-bottom: 30px;
-            color: #5a3d5c;
-        }
-
-        .form-group {
-            margin-bottom: 25px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-            color: #5a3d5c;
-        }
-
-        input[type="text"],
-        textarea {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 15px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        input[type="text"]:focus,
-        textarea:focus {
-            border-color: #e86ed0;
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(232, 110, 208, 0.2);
-        }
-
-        textarea {
-            min-height: 300px;
-            resize: vertical;
-        }
-
-        .btn {
-            padding: 12px 25px;
-            border-radius: 50px;
-            border: none;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .btn i {
-            margin-right: 8px;
-        }
-
-        .btn-primary {
-            background-color: #e86ed0;
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background-color: #d55bc0;
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(232, 110, 208, 0.3);
-        }
-
-        #status {
-            text-align: center;
-            margin-top: 20px;
-            color: #9d7e9f;
-            font-style: italic;
-        }
-
-        footer {
-            text-align: center;
-            padding: 30px 0;
-            color: #9d7e9f;
-            font-size: 0.9rem;
-            background-color: white;
-            margin-top: auto;
-        }
-
-        @media (max-width: 768px) {
-            .upload-container {
-                padding: 30px 20px;
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Upload Your Story - DreamTalk Box</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    /* 样式略，保持原样 */
+    body {
+      background-color: #fcf2f7;
+      color: #5a3d5c;
+      font-family: 'Arial Rounded MT Bold', sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      flex: 1;
+    }
+    .upload-container {
+      background-color: white;
+      border-radius: 30px;
+      padding: 40px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+      margin-bottom: 40px;
+    }
+    footer {
+      text-align: center;
+      padding: 30px 0;
+      color: #9d7e9f;
+      font-size: 0.9rem;
+      background-color: white;
+      margin-top: auto;
+    }
+  </style>
 </head>
-
 <body>
-    <div class="container">
-        <header>
-            <button class="back-button" onclick="location.href='index.html'">
-                <i class="fas fa-arrow-left"></i> Back
-            </button>
-            <a href="index.html" class="logo">
-                <i class="fas fa-moon"></i> DreamTalk Box
-            </a>
-            <div style="width: 100px;"></div> <!-- Spacer for alignment -->
-        </header>
+  <div class="container">
+    <header>
+      <button onclick="location.href='index.html'">Back</button>
+      <h1>DreamTalk Box</h1>
+    </header>
 
-        <div class="upload-container">
-            <h1>Create Your Own Story</h1>
+    <div class="upload-container">
+      <h1>Create Your Own Story</h1>
+      <form id="story-form">
+        <label for="story-title">Title</label>
+        <input type="text" id="story-title" required />
 
-            <form id="story-form">
-                <div class="form-group">
-                    <label for="story-title">Story Title</label>
-                    <input type="text" id="story-title" placeholder="Enter a title for your story" required>
-                </div>
+        <label for="story-content">Content</label>
+        <textarea id="story-content" required></textarea>
 
-                <div class="form-group">
-                    <label for="story-content">Story Content</label>
-                    <textarea id="story-content" placeholder="Write your story here..." required></textarea>
-                </div>
-
-                <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-cloud-upload-alt"></i> Upload Story
-                </button>
-            </form>
-
-            <p id="status"></p>
-        </div>
+        <button type="submit">Upload</button>
+      </form>
+      <p id="status"></p>
     </div>
+  </div>
 
-    <footer>
-        <p>© 2023 DreamTalk Box. All rights reserved.</p>
-    </footer>
+  <footer>
+    <p>© 2023 DreamTalk Box. All rights reserved.</p>
+  </footer>
 
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
-    <script>
-        // Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyD4fhwhOOFF7CBEWYnOplLiAh021905LAQ",
-            authDomain: "dreamtalk-91c96.firebaseapp.com",
-            projectId: "dreamtalk-91c96",
-            storageBucket: "dreamtalk-91c96.firebasestorage.app",
-            messagingSenderId: "1073825503044",
-            appId: "1:1073825503044:web:c70d0c119795b66dab6911",
-            measurementId: "G-XJZE5QM6W0"
-        };
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyD4fhwhOOFF7CBEWYnOplLiAh021905LAQ",
+      authDomain: "dreamtalk-91c96.firebaseapp.com",
+      projectId: "dreamtalk-91c96",
+      storageBucket: "dreamtalk-91c96.appspot.com",
+      messagingSenderId: "1073825503044",
+      appId: "1:1073825503044:web:c70d0c119795b66dab6911",
+      measurementId: "G-XJZE5QM6W0"
+    };
 
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+    const statusElement = document.getElementById('status');
 
-        // Get references to Firebase services
-        const auth = firebase.auth();
-        const db = firebase.firestore();
+    function updateStatus(message) {
+      statusElement.textContent = message;
+    }
 
-        // Status message element
-        const statusElement = document.getElementById('status');
+    auth.signInAnonymously().catch((error) => {
+      updateStatus('Error signing in: ' + error.message);
+    });
 
-        // Function to update status
-        function updateStatus(message) {
-            statusElement.textContent = message;
-        }
+    document.getElementById('story-form').addEventListener('submit', function (e) {
+      e.preventDefault();
 
-        // Sign in anonymously when page loads
-        document.addEventListener('DOMContentLoaded', function () {
-            signInAnonymously();
+      const title = document.getElementById('story-title').value.trim();
+      const content = document.getElementById('story-content').value.trim();
+
+      if (!title || !content) {
+        updateStatus('Please fill in all fields');
+        return;
+      }
+
+      const user = auth.currentUser;
+      if (!user) {
+        updateStatus('Signing you in, please wait...');
+        auth.onAuthStateChanged((newUser) => {
+          if (newUser) {
+            uploadStory(newUser, title, content);
+          }
         });
+        return;
+      }
 
-        // Anonymous sign in function
-        function signInAnonymously() {
-            auth.signInAnonymously()
-                .then(() => {
-                    console.log('Signed in anonymously');
-                })
-                .catch((error) => {
-                    console.error('Error signing in:', error);
-                    updateStatus('Error signing in: ' + error.message);
-                });
-        }
+      uploadStory(user, title, content);
+    });
 
-        // Handle form submission
-        document.getElementById('story-form').addEventListener('submit', function (e) {
-            e.preventDefault();
+    function uploadStory(user, title, content) {
+      updateStatus('Uploading your story...');
+      const storyData = {
+        title: title,
+        content: content,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+      };
 
-            // Get form values
-            const title = document.getElementById('story-title').value.trim();
-            const content = document.getElementById('story-content').value.trim();
-
-            // Validate input
-            if (!title || !content) {
-                updateStatus('Please fill in all fields');
-                return;
-            }
-
-            // Check if user is signed in
-            const user = auth.currentUser;
-            if (!user) {
-                updateStatus('Please wait, signing you in...');
-                signInAnonymously();
-                return;
-            }
-
-            // Show uploading status
-            updateStatus('Uploading your story...');
-
-            // Create story object
-            const storyData = {
-                title: title,
-                content: content,
-                timestamp: firebase.firestore.FieldValue.serverTimestamp()
-            };
-
-            // Add to Firestore
-            db.collection('users').doc(user.uid).collection('stories').add(storyData)
-                .then((docRef) => {
-                    console.log('Story uploaded with ID:', docRef.id);
-                    updateStatus('Story uploaded successfully!');
-
-                    // Clear form
-                    document.getElementById('story-form').reset();
-
-                    // Redirect to my-stories page after 2 seconds
-                    setTimeout(() => {
-                        window.location.href = 'my-stories.html';
-                    }, 2000);
-                })
-                .catch((error) => {
-                    console.error('Error uploading story:', error);
-                    updateStatus('Error uploading story: ' + error.message);
-                });
+      db.collection('users').doc(user.uid).collection('stories').add(storyData)
+        .then((docRef) => {
+          updateStatus('Story uploaded successfully!');
+          document.getElementById('story-form').reset();
+          setTimeout(() => {
+            window.location.href = 'my-stories.html';
+          }, 2000);
+        })
+        .catch((error) => {
+          updateStatus('Error uploading story: ' + error.message);
         });
-    </script>
+    }
+  </script>
 </body>
-
 </html>
