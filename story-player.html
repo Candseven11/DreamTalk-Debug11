@@ -429,71 +429,27 @@
         /**
          * Extract story ID from URL parameters and load the story
          */
-        async function loadStoryFromUrl() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const storyId = urlParams.get('id');
-
-            if (!storyId) {
-                showError("No story ID provided");
-                return;
-            }
-
-            // 首先检查是否为用户上传的故事 (通常以 "story_" 开头)
-            if (storyId.startsWith('story_')) {
-                // 从 localStorage 中读取用户故事
-                const userStories = JSON.parse(localStorage.getItem('userStories')) || [];
-                const userStory = userStories.find(story => story.id === storyId);
-
-                if (userStory) {
-                    // 找到用户故事，加载内容
-                    displayStory(userStory);
-                } else {
-                    showError("User story not found");
-                }
-            } else {
-                // 尝试从系统故事中加载
-                fetch('stories.json')
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
-                        return response.json();
-                    })
-                    .then(stories => {
-                        const story = stories.find(s => s.id === storyId);
-
-                        if (story) {
-                            displayStory(story);
-                        } else {
-                            // 如果系统故事中找不到，再次尝试从用户故事中查找
-                            const userStories = JSON.parse(localStorage.getItem('userStories')) || [];
-                            const userStory = userStories.find(s => s.id === storyId);
-
-                            if (userStory) {
-                                displayStory(userStory);
-                            } else {
-                                showError("Story not found");
-                            }
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error loading story:', error);
-
-                        // 如果系统故事加载失败，尝试从用户故事中查找
-                        try {
-                            const userStories = JSON.parse(localStorage.getItem('userStories')) || [];
-                            const userStory = userStories.find(s => s.id === storyId);
-
-                            if (userStory) {
-                                displayStory(userStory);
-                            } else {
-                                showError("Failed to load story");
-                            }
-                        } catch (e) {
-                            showError("Failed to load story");
-                        }
-                    });
-            }
+        function loadStoryFromUrlWithRetry(retries = 5) {
+            fetch('/stories.json')
+                .then(response => {
+                    if (!response.ok) throw new Error('Failed to fetch stories');
+                    return response.json();
+                })
+                .then(stories => {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const storyId = urlParams.get('id');
+                    const story = stories.find(s => s.id === storyId);
+                    if (!story) throw new Error('Story not found');
+                    displayStory(story);
+                })
+                .catch(error => {
+                    console.warn('Story load failed:', error.message);
+                    if (retries > 0) {
+                        setTimeout(() => loadStoryFromUrlWithRetry(retries - 1), 300); // 每300ms 重试
+                    } else {
+                        alert('Error: Failed to load story');
+                    }
+                });
         }
 
         /**
