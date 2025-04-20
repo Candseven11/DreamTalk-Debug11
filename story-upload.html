@@ -254,13 +254,53 @@
                     <input type="text" id="story-title" name="title" required placeholder="Enter a captivating title">
                 </div>
                 
+                <!-- 添加年龄范围选择 -->
+                <div class="form-group">
+                    <label for="age-range">Age Range</label>
+                    <select id="age-range" name="ageRange">
+                        <option value="Ages 2-4">Ages 2-4</option>
+                        <option value="Ages 5-7" selected>Ages 5-7</option>
+                        <option value="Ages 8-10">Ages 8-10</option>
+                        <option value="Ages 11+">Ages 11+</option>
+                    </select>
+                </div>
+                
+                <!-- 添加分类选择 -->
+                <div class="form-group">
+                    <label for="category">Category</label>
+                    <select id="category" name="category">
+                        <option value="Bedtime" selected>Bedtime</option>
+                        <option value="Adventure">Adventure</option>
+                        <option value="Fantasy">Fantasy</option>
+                        <option value="Educational">Educational</option>
+                        <option value="Animals">Animals</option>
+                    </select>
+                </div>
+                
+                <!-- 添加封面图片上传 -->
+                <div class="form-group">
+                    <label for="cover-image">Cover Image</label>
+                    <div class="image-preview" id="image-preview">
+                        <!-- 预览图片将在这里显示 -->
+                    </div>
+                    <div class="image-upload-container">
+                        <input type="file" id="image-upload" accept="image/*" style="display: none;">
+                        <button type="button" class="upload-btn" id="upload-btn">
+                            <i class="fas fa-upload"></i> Upload Image
+                        </button>
+                        <span class="or-divider">OR</span>
+                        <input type="text" id="image-url" class="url-input" placeholder="Enter image URL">
+                        <div id="selected-file-name" style="margin-top: 10px; font-size: 0.9rem;"></div>
+                    </div>
+                </div>
+                
                 <div class="form-group">
                     <label for="story-content">Story Content <span class="required">*</span></label>
                     <textarea id="story-content" name="content" required placeholder="Once upon a time..."></textarea>
                 </div>
                 
-                <button type="submit" class="btn btn-primary btn-block">
-                    <i class="fas fa-cloud-upload-alt"></i> Upload Story
+                <button type="submit" class="btn btn-primary btn-block" id="submit-btn">
+                    <i class="fas fa-cloud-upload-alt"></i> Submit Story
                 </button>
             </form>
             
@@ -277,6 +317,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-storage-compat.js"></script>
     
     <script>
         // Firebase 配置
@@ -293,19 +334,71 @@
         // 初始化 Firebase
         firebase.initializeApp(firebaseConfig);
         
-        // 获取 Firestore 实例
+        // 获取 Firestore 和 Storage 实例
         const db = firebase.firestore();
+        const storage = firebase.storage();
         
         // 获取表单元素
         const storyForm = document.getElementById('story-form');
         const titleInput = document.getElementById('story-title');
         const contentInput = document.getElementById('story-content');
+        const ageRangeSelect = document.getElementById('age-range');
+        const categorySelect = document.getElementById('category');
+        const imageUpload = document.getElementById('image-upload');
+        const imageUrl = document.getElementById('image-url');
+        const uploadBtn = document.getElementById('upload-btn');
+        const imagePreview = document.getElementById('image-preview');
+        const selectedFileName = document.getElementById('selected-file-name');
         const statusMessage = document.getElementById('status-message');
         const loadingSpinner = document.getElementById('loading-spinner');
+        const submitBtn = document.getElementById('submit-btn');
+        
+        // 图片上传相关变量
+        let selectedFile = null;
+        let imageUrlValue = '';
+        
+        // 图片上传按钮点击事件
+        uploadBtn.addEventListener('click', function() {
+            imageUpload.click();
+        });
+        
+        // 文件选择事件
+        imageUpload.addEventListener('change', function(e) {
+            if (e.target.files && e.target.files[0]) {
+                selectedFile = e.target.files[0];
+                imageUrlValue = '';
+                imageUrl.value = '';
+                
+                // 显示选择的文件名
+                selectedFileName.textContent = selectedFile.name;
+                
+                // 预览图片
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imagePreview.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
+                };
+                reader.readAsDataURL(selectedFile);
+            }
+        });
+        
+        // 图片URL输入事件
+        imageUrl.addEventListener('input', function() {
+            imageUrlValue = this.value.trim();
+            if (imageUrlValue) {
+                selectedFile = null;
+                selectedFileName.textContent = '';
+                
+                // 预览URL图片
+                imagePreview.innerHTML = `<img src="${imageUrlValue}" alt="Preview" onerror="this.src='https://via.placeholder.com/400x200?text=Invalid+Image+URL'">`;
+            }
+        });
         
         // 表单提交处理
         storyForm.addEventListener('submit', async function(e) {
             e.preventDefault();
+            
+            // 禁用提交按钮防止重复提交
+            submitBtn.disabled = true;
             
             // 显示加载状态
             loadingSpinner.style.display = 'block';
@@ -314,10 +407,13 @@
             // 获取表单数据
             const title = titleInput.value.trim();
             const content = contentInput.value.trim();
+            const ageRange = ageRangeSelect.value;
+            const category = categorySelect.value;
             
             // 验证表单数据
             if (!title || !content) {
                 showStatus('Please fill in all required fields.', 'error');
+                submitBtn.disabled = false;
                 return;
             }
             
@@ -332,11 +428,26 @@
                 // 生成唯一ID
                 const storyId = 'story_' + Date.now();
                 
+                // 处理封面图片
+                let coverImageUrl = '';
+                
+                if (selectedFile) {
+                    // 上传文件到 Firebase Storage
+                    const storageRef = storage.ref(`users/${currentUser.uid}/covers/${storyId}`);
+                    await storageRef.put(selectedFile);
+                    coverImageUrl = await storageRef.getDownloadURL();
+                } else if (imageUrlValue) {
+                    coverImageUrl = imageUrlValue;
+                }
+                
                 // 创建故事对象
                 const story = {
                     id: storyId,
                     title: title,
                     content: content,
+                    ageRange: ageRange,
+                    category: category,
+                    coverImage: coverImageUrl,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                     userId: currentUser.uid
                 };
@@ -358,6 +469,7 @@
             } catch (error) {
                 console.error('Error uploading story:', error);
                 showStatus('Error uploading story: ' + error.message, 'error');
+                submitBtn.disabled = false;
             }
         });
         
@@ -372,13 +484,21 @@
         // 保存故事到本地存储
         function saveStoryToLocalStorage(story) {
             // 获取现有故事
-            let userStories = JSON.parse(localStorage.getItem('userStories')) || [];
+            let userStories = [];
+            try {
+                userStories = JSON.parse(localStorage.getItem('userStories')) || [];
+            } catch (e) {
+                userStories = [];
+            }
             
             // 添加新故事
             userStories.push({
                 id: story.id,
                 title: story.title,
                 content: story.content,
+                ageRange: story.ageRange,
+                category: story.category,
+                coverImage: story.coverImage,
                 createdAt: new Date().toISOString(),
                 userId: story.userId
             });
