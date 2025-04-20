@@ -452,7 +452,7 @@
                 }
             } else {
                 // 尝试从系统故事中加载
-                fetch('stories.json')
+                fetch('/stories.json')
                     .then(response => {
                         if (!response.ok) {
                             throw new Error('Network response was not ok');
@@ -505,7 +505,7 @@
                 updateStatus('Loading story...');
 
                 // Fetch stories.json
-                const response = await fetch('stories.json');
+                const response = await fetch('/stories.json');
                 if (!response.ok) {
                     throw new Error(`Failed to fetch stories: ${response.status}`);
                 }
